@@ -178,8 +178,51 @@ EXTRACT(YEAR FROM HIRE_DATE) || '년'||
 EXTRACT(MONTH FROM HIRE_DATE) || '월'||
 EXTRACT(DAY FROM HIRE_DATE) || '일' 입사일 FROM EMPLOYEE;
 
+----------------------------------------------
+
+/* 형변환 함수 */
+-- 문자열(CHAR), 숫자(NUMBER), 날짜(DATE)끼리 형변환 가능
+
+/* 문자열로 변환*/
+-- TO_CHAR(날짜, [포맷] ) : 날짜형 데이터를 문자형 데이터로 변경
+-- TO_CHAR(숫자, [포맷] ) : 숫자형 데이터를 문자형 데이터로 변경
+
+-- <숫자 변환 시 포맷 패턴>
+-- 9 : 숫자 한 칸을 의미, 여러 개 작성 시 오른쪽 정렬
+-- 0 : 숫자 한 칸을 의미, 여러 개 작성 시 오른쪽 정렬 + 빈칸 0 추가
+-- L : 현재 DB에 설정된 나라의 화폐 기호
+
+SELECT TO_CHAR(1234) FROM DUAL; -- 1,234 -> '1234'
+
+SELECT TO_CHAR(1234, '99999') FROM DUAL; --> ' 1234' 앞에 한 칸 공백
+
+SELECT TO_CHAR(1234, '00000') FROM DUAL; --> '01234' 빈 칸에 0 추가
+
+SELECT TO_CHAR( EXTRACT(MONTH FROM HIRE_DATE), '00' ) || '월' FROM EMPLOYEE;
+
+SELECT TO_CHAR(1000000, '9,999,999') || '원' FROM DUAL; -- 1,000,000원'
+
+SELECT TO_CHAR(1000000, 'L9,999,999') FROM DUAL; -- '￦1,000,000'
 
 
+-- <날짜 변환 시 포맷 패턴>
+
+-- YYYY : 년도 / YY : 년도 (짧게) 
+-- RRRR : 년도 / RR : 년도 (짧게) 
+-- MM : 월 / DD : 일
+-- AM 또는 PM : 오전/오후 표시
+-- HH : 시간 / HH24 : 24시간 표기법
+-- MI : 분 / SS : 초
+
+-- DAY : 요일(전체) / DY : 요일(요일명만 표시)
+
+SELECT SYSDATE FROM DUAL; -- 2024-02-29 12:20:58.000
+
+-- 2024/02/29 12:20:54 목요일
+SELECT TO_CHAR(SYSDATE, 'YYYY/MM/DD HH24:MI:SS DAY') FROM DUAL; 
+
+-- 02/29 (목)
+SELECT TO_CHAR(SYSDATE, 'MM.DD (DY)') FROM DUAL; 
 
 
 
