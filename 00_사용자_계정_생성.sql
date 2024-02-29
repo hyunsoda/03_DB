@@ -14,17 +14,17 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 
 -- 사용자 계정 생성
 	-- 관리자 계정이기때문에 가능
-CREATE USER kh_ash IDENTIFIED BY kh1234;
+CREATE USER workbook IDENTIFIED BY workbook;
 
 
 -- 사용자 계정에 권한 부여
-GRANT RESOURCE, CONNECT TO kh_ash;
+GRANT RESOURCE, CONNECT TO workbook;
 		-- RESOURCE : 데이터베이스 객체를 생성하거나 관리하는데 필요한 권한을 줌
 		-- 데이터베이스 객체 : table, view, sequence
 		-- CONNECT : 접속 권한
 
 -- 객체가 생성될 수 있는 공간 할당량 지정
-ALTER USER kh_ash DEFAULT TABLESPACE SYSTEM QUOTA UNLIMITED ON SYSTEM;
+ALTER USER workbook DEFAULT TABLESPACE SYSTEM QUOTA UNLIMITED ON SYSTEM;
 	-- 테이블 만드는데 공간 제한이 없다
 
 
