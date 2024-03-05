@@ -229,41 +229,108 @@ SELECT EMP_NAME, SALARY, SAL_GRADE.SAL_LEVEL
 FROM EMPLOYEE
 JOIN SAL_GRADE ON(SALARY BETWEEN MIN_SAL AND MAX_SAL);
 
+---------------------------------------------------------------------------
+
+-- 5. 자체 조인 (SELF JOIN)
+
+-- 같은 테이블을 조인.
+-- 자기 자신과 조인을 맺음
+-- TIP ! 같은 테이블 2개가 있다고 생각하고 JOIN 진행
+
+-- 사번, 이름, 사수의 사번, 사수 이름 조회
+
+-- ANSI 표준
+SELECT E1.EMP_ID, E1.EMP_NAME,NVL(E1.MANAGER_ID,'없음') MANAGER_ID , NVL(E2.EMP_NAME, '-') MANAGER_NAME
+FROM EMPLOYEE E1
+LEFT JOIN EMPLOYEE E2 ON(E1.MANAGER_ID = E2.EMP_ID);
+	-- 그냥 JOIN만 쓰면 INNER JOIN돼서 사수가 없는 사람들은 나오지 않음
 
 
+-- 오라클 구문
+SELECT E1.EMP_ID, E1.EMP_NAME,
+NVL(E1.MANAGER_ID,'없음') MANAGER_ID , 
+NVL(E2.EMP_NAME, '-') MANAGER_NAME
+FROM EMPLOYEE E1, EMPLOYEE E2
+WHERE E1.MANAGER_ID = E2.EMP_ID (+);
 
 
+------------------------------------------------------------------------------------------
+
+-- 6. 자연 조인 (NATURAL JOIN)
+-- 동일한 타입과 이름을 가진 컬럼이 있는 테이블 간의
+-- 조인을 간단히 표현하는 방법
+
+-- 반드시 두 테이블 간의 동일한 컬럼명, 타입을 가진 컬럼이 필요
+
+--> 없을 경우 교차조인됨.
+
+SELECT EMP_NAME, JOB_NAME
+FROM EMPLOYEE
+-- JOIN JOB USING(JOB_CODE);
+NATURAL JOIN JOB;
+			-- 테이블을 잘 알고 있을 때 사용 / 잘못 JOIN되면 CROSS JOIN됨
 
 
+/* 잘못 쓴 경우 */
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE 
+NATURAL JOIN DEPARTMENT;
+--> 잘못 조인하면 CROSS JOIN 결과 조회
+
+---------------------------------------------------------------------
+
+-- 7. 다중 조인
+-- N개의 테이블을 조회할 때 사용 (순서 중요!!!)
+
+-- 사원이름, 부서명, 지역명 조회
+--> EMPLOYEE, DEPARTMENT, LOCATION
+
+-- ANSI 표준
+SELECT EMP_NAME, DEPT_TITLE, LOCAL_NAME
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+JOIN LOCATION ON (LOCATION_ID = LOCAL_CODE);
+
+	-- DBEAVER CTRL + SHIFT + 방향키 : 위아래 줄바꾸기
+	--				 CTRL + ALT + 방향키 : 위아래 줄 복사	
 
 
+-- 오라클 전용
+SELECT EMP_NAME, DEPT_TITLE, LOCAL_NAME
+FROM EMPLOYEE, DEPARTMENT, LOCATION
+WHERE DEPT_CODE = DEPT_ID  -- EMPLOYEE + DEPARTMENT 조인
+AND LOCATION_ID = LOCAL_CODE; -- (EMPLOYEE + DEPARTMENT) + LOCATION 조인
 
 
+-- 조인 순서를 지키지 않은 경우 (에러 발생)
 
 
+-- [다중 조인 연습 문제]
 
 
+-- 직급이 대리이면서 아시아 지역에 근무하는 직원 조회
+-- 사번, 이름, 직급명, 부서명, 근무지역명, 급여를 조회해라!
 
 
+-- ANSI 
+SELECT EMP_ID, EMP_NAME, JOB_NAME, DEPT_TITLE, LOCAL_NAME, SALARY 
+FROM EMPLOYEE
+JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID)
+JOIN JOB USING(JOB_CODE)
+JOIN LOCATION ON (LOCATION_ID = LOCAL_CODE) 
+WHERE JOB_CODE = 'J6'
+-- WHERE JOB_NAME = '대리'
+AND LOCAL_NAME LIKE 'ASIA%';
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- 오라클
+SELECT EMP_ID, EMP_NAME, JOB_NAME, DEPT_TITLE, LOCAL_NAME, SALARY 
+FROM EMPLOYEE E , JOB J, DEPARTMENT, LOCATION
+WHERE DEPT_CODE = DEPT_ID
+AND E.JOB_CODE = J.JOB_CODE 
+AND LOCATION_ID = LOCAL_CODE
+AND E.JOB_CODE = 'J6'
+AND LOCAL_NAME LIKE 'ASIA%';
 
 
 
