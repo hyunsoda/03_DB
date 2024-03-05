@@ -200,6 +200,80 @@ FROM EMPLOYEE, DEPARTMENT
 WHERE DEPT_CODE(+) = DEPT_ID(+); 
 */
 
+----------------------------------------------------------------------------
+
+-- 3. 교차 조인 (CROSS JOIN == CARTESIAN PRODUCT)
+-- 조인되는 테이블의 각 행들이 모두 매핑된 데이터가 검색되는 방법 (곱집합)
+--> JOIN 구문을 잘못 작성하는 경우 CROSS JOIN의 결과가 조회됨
+
+
+SELECT EMP_NAME, DEPT_TITLE
+FROM EMPLOYEE
+CROSS JOIN DEPARTMENT; -- 207행 == (EMPLOYEE) 23행 * (DEPARTMENT) 9행 = 207행
+
+
+---------------------------------------------------------------------------
+
+
+-- 4. 비등가 조인(NON EQUAL JOIN)
+
+-- '=' (등호)를 사용하지 않는 조인문
+-- 지정한 컬럼값이 일치하는 경우가 아닌, 값의 범위에 포함되는 행들을 연결하는 방식
+
+SELECT * FROM SAL_GRADE;
+
+SELECT EMP_NAME, SAL_LEVEL FROM EMPLOYEE;
+
+-- 사원의 급여에 따른 급여 등급 파악하기
+SELECT EMP_NAME, SALARY, SAL_GRADE.SAL_LEVEL 
+FROM EMPLOYEE
+JOIN SAL_GRADE ON(SALARY BETWEEN MIN_SAL AND MAX_SAL);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
