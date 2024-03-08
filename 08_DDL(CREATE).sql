@@ -308,6 +308,175 @@ VALUES(4,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr')
 -- 3. PRIMARY KEY(기본키) 제약조건
 
 -- 테이블에서 한 행의 정보를 찾기 위해 사용할 컬럼을 의미함.	
+-- 테이블에 대한 식별자(사용자번호, 학번...) 역할을 함
+
+-- NOT NULL + UNIQUE 제약조건의 의미 -> 중복되지 않는 값이 필수로 존재해야함.
+
+-- 한 테이블당 한 개만 설정할 수 있음
+-- 컬럼레벨, 테이블레벨 둘 다 설정 가능함
+-- 한 개 컬럼에 설정할 수 있고, 여러 개의 컬럼을 묶어서 설정할 수 있음.
+
+CREATE TABLE USER_USED_PK(
+		USER_NO NUMBER CONSTRAINT USER_NO_PK PRIMARY KEY, -- 컬럼 레벨
+													-- 제약조건명 지정
+		USER_ID VARCHAR2(20),
+		USER_PWD VARCHAR2(30),
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50)
+		-- 테이블 레벨
+		-- , CONSTRAINT USER_NO_PK PRIMARY KEY(USER_NO)
+);
+
+
+INSERT INTO USER_USED_PK
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr');
+
+INSERT INTO USER_USED_PK
+VALUES(1,'USER02','PASS02','이순신','남','010-5678-5678','lee123@kh.or.kr');
+-- 기본키 중복 오류
+-- ORA-00001: 무결성 제약 조건(KH_ASH.USER_NO_PK)에 위배됩니다
+
+INSERT INTO USER_USED_PK
+VALUES(NULL,'USER03','PASS03','유관순','여','010-9999-5678','yoo123@kh.or.kr');
+-- 기본키 NULL 이므로 오류
+-- ORA-01400: NULL을 ("KH_ASH"."USER_USED_PK"."USER_NO") 안에 삽입할 수 없습니다
+
+
+---------------------------------------------------------------
+
+-- PRIMARY KEY 복합키 (테이블 레벨만 가능)
+
+CREATE TABLE USER_USED_PK2(
+		USER_NO NUMBER,
+		USER_ID VARCHAR2(20),
+		USER_PWD VARCHAR2(30),
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50)
+		-- 테이블 레벨
+		 , CONSTRAINT PK_USERNO_USERID PRIMARY KEY(USER_NO, USER_ID)
+);
+
+INSERT INTO USER_USED_PK2
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr');
+
+INSERT INTO USER_USED_PK2
+VALUES(1,'USER02','PASS012','이순신','남','010-1234-5678','hong123@kh.or.kr'); -- USER_NO는 겹치지만 USER_ID는 겹치지 않는다
+
+INSERT INTO USER_USED_PK2
+VALUES(2,'USER01','PASS02','유관순','여','010-1234-5678','hong123@kh.or.kr'); -- USER_ID는 겹치지만 USER_NO는 겹치지 않는다
+
+INSERT INTO USER_USED_PK2
+VALUES(1,'USER01','PASS02','신사임당','여','010-1234-5678','hong123@kh.or.kr');
+-- 무결성 제약 조건(KH_ASH.PK_USERNO_USERID)에 위배됩니다
+-- 회원번호와 아이디 둘 다 중복되었을때만 제약조건 위배 에러 발생!
+
+INSERT INTO USER_USED_PK2
+VALUES(NULL,'USER01','PASS02','신사임당','여','010-1234-5678','hong123@kh.or.kr');
+--  ORA-01400: NULL을 ("KH_ASH"."USER_USED_PK2"."USER_NO") 안에 삽입할 수 없습니다
+-- PRIMARY KEY는 NULL이 들어갈 수 없음~!
+
+SELECT * FROM USER_USED_PK2;
+
+
+--------------------------------------------------------------------------------------------
+
+-- 4. FOREIGN KEY (외래키/외부키) 제약조건
+
+-- 참조(REFERENCES)된 다른 테이블의 컬럼이 제공하는 값만 사용할 수 있음
+-- FOREIGN KEY 제약 조건에 의해서 테이블간의 관계가 형성됨
+-- 제공되는 값 외에는 NULL을 사용할 수 있음.
+
+
+-- 컬럼 레벨일 경우
+-- 컬럼명 자료형(크기) [CONSTRAINT 이름] REFERENCES 참조할 테이블명 [(참조할 컬럼)] [삭제룰]
+
+-- 테이블 레벨일 경우
+-- [CONSTRAINT 이름] FOREIGN KEY (적용할 컬럼명) REFERENCES 참조할 테이블명 [(참조할 컬럼)] [삭제룰]
+
+-- * 참조될 수 있는 컬럼은 PRIMARY KEY 컬럼과, UNIQUE 지정된 컬럼만 외래키로 사용할 수 있음.
+-- 참조할 테이블의 참조할 컬럼명이 생략되면, PRIMARY KEY로 설정된 컬럼이 자동 참조할 컬럼이 됨.
+
+
+-- 부모테이블 / 참조할 테이블(대상이 되는 테이블)
+CREATE TABLE USER_GRADE(
+		GRADE_CODE NUMBER PRIMARY KEY, -- 등급 번호
+		GRADE_NAME VARCHAR2(30) NOT NULL -- 등급명
+);
+
+INSERT INTO USER_GRADE VALUES(10,'일반회원');
+INSERT INTO USER_GRADE VALUES(20,'우수회원');
+INSERT INTO USER_GRADE VALUES(30,'특별회원');
+
+SELECT * FROM USER_GRADE;
+
+
+-- 자식 테이블 (USER_GRADE를 사용할 테이블)
+CREATE TABLE USER_USED_FK(
+	  USER_NO NUMBER PRIMARY KEY,
+		USER_ID VARCHAR2(20) UNIQUE,
+		USER_PWD VARCHAR2(30) NOT NULL,
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50), 
+		GRADE_CODE NUMBER CONSTRAINT GRADE_CODE_FK REFERENCES USER_GRADE /*(GRADE_CODE)*/	  -- 컬럼 레벨
+																																-- 컬럼명 미작성 시 USER_GRADE 테이블의 PK를 자동 참조
+		
+		-- 테이블 레벨
+		-- , CONSTRAINT GRADE_CODE_FK FOREIGN KEY(GRADE_CODE) REFERENCES USER_GRADE
+													--> FOREIGN KEY라는 단어는 테이블 레벨에서만 사용!
+);
+
+COMMIT;
+
+
+INSERT INTO USER_USED_FK
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK
+VALUES(2,'USER02','PASS02','이순신','남','010-5678-5678','lee123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK
+VALUES(3,'USER03','PASS03','유관순','여','010-5999-5678','yoo123@kh.or.kr',30);
+
+INSERT INTO USER_USED_FK
+VALUES(4,'USER04','PASS04','안중근','남','010-2222-1111','ahn123@kh.or.kr', NULL); -- NULL 사용 가능
+
+INSERT INTO USER_USED_FK
+VALUES(5,'USER05','PASS05','윤봉길','남','010-2222-5678','yoon123@kh.or.kr',50);
+-- ORA-02291: 무결성 제약조건(KH_ASH.GRADE_CODE_FK)이 위배되었습니다- 부모 키가 없습니다
+-- 50이라는 값은 USER_GRADE 테이블 GRADE_CODE 컬럼에서 제공하는 값이 아니므로
+-- 외래키 제약조건에 위배되어 오류 발생
+
+
+SELECT * FROM USER_USED_FK;
+
+COMMIT;
+
+
+----------------------------------------------------------------------
+
+-- * FOREIGN KEY 삭제 옵션
+-- 부모 테이블의 데이터 삭제 시 자식 테이블의 데이터를
+-- 어떤 식으로 처리할지에 대한 내용을 설정할 수 있다.
+
+
+-- 1) ON DELETE RESTRICTED (삭제 제한)로 기본 지정되어 있음
+-- FOREIGN KEY로 지정된 컬럼에서 사용되고 있는 값일 경우
+-- 제공하는 컬럼의 값은 삭제하지 못함
+
+DELETE FROM USER_GRADE WHERE GRADE_CODE = 30; -- 30은 자식테이블에서 사용되고 있는 값
+-- ORA-02292: 무결성 제약조건(KH_ASH.GRADE_CODE_FK)이 위배되었습니다- 자식 레코드가 발견되었습니다
+
+
+-- GRADE_CODE 중 20은 외래키로 참조되고 있지 않으므로 삭제가 가능함.
+DELETE FROM USER_GRADE WHERE GRADE_CODE = 20; 
+SELECT * FROM USER_GRADE; -- 20 삭제됨
+ROLLBACK;
 
 
 
@@ -315,11 +484,163 @@ VALUES(4,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr')
 
 
 
+-- 2) ON DELETE SET NULL : 부모키 삭제 시 자식 키를 NULL로 변경하는 옵션
+
+
+
+-- 부모테이블 / 참조할 테이블(대상이 되는 테이블)
+CREATE TABLE USER_GRADE2(
+		GRADE_CODE NUMBER PRIMARY KEY, -- 등급 번호
+		GRADE_NAME VARCHAR2(30) NOT NULL -- 등급명
+);
+
+INSERT INTO USER_GRADE2 VALUES(10,'일반회원');
+INSERT INTO USER_GRADE2 VALUES(20,'우수회원');
+INSERT INTO USER_GRADE2 VALUES(30,'특별회원');
+
+SELECT * FROM USER_GRADE2;
+
+
+-- 자식 테이블 (USER_GRADE를 사용할 테이블)
+
+
+-- ON DELETE SET NULL 삭제옵션이 적용된 테이블 생성
+CREATE TABLE USER_USED_FK2(
+	  USER_NO NUMBER PRIMARY KEY,
+		USER_ID VARCHAR2(20) UNIQUE,
+		USER_PWD VARCHAR2(30) NOT NULL,
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50), 
+		GRADE_CODE NUMBER CONSTRAINT GRADE_CODE_FK2 REFERENCES USER_GRADE2 ON DELETE SET NULL
+);																																			/* 삭제 옵션 */
+
+COMMIT;
+
+
+INSERT INTO USER_USED_FK2
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK2
+VALUES(2,'USER02','PASS02','이순신','남','010-5678-5678','lee123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK2
+VALUES(3,'USER03','PASS03','유관순','여','010-5999-5678','yoo123@kh.or.kr',30);
+
+INSERT INTO USER_USED_FK2
+VALUES(4,'USER04','PASS04','안중근','남','010-2222-1111','ahn123@kh.or.kr', NULL); -- NULL 사용 가능
+
+
+COMMIT;
+
+
+SELECT * FROM USER_USED_FK2;
+SELECT * FROM USER_GRADE2;
+
+-- 부모테이블인 USER_GRADE2에서 GRADE_CODE = 10 삭제
+--> ON DELETE SET NULL 옵션이 설정되어 있어 오류 없이 삭제됨
+DELETE FROM USER_GRADE2 WHERE GRADE_CODE = 10;
+
+
+
+SELECT * FROM USER_USED_FK2;
+SELECT * FROM USER_GRADE2; -- 10을 가졌던 자식테이블 값이 NULL이 됨을 확인
 
 
 
 
 
+
+-- 3) ON DELETE CASCADE : 부모키 삭제시 자식키도 함께 삭제됨
+-- 부모키 삭제시 값을 사용하는 자식 테이블의 컬럼에 해당하는 행이 삭제됨
+
+CREATE TABLE USER_GRADE3(
+		GRADE_CODE NUMBER PRIMARY KEY, -- 등급 번호
+		GRADE_NAME VARCHAR2(30) NOT NULL -- 등급명
+);
+
+INSERT INTO USER_GRADE3 VALUES(10,'일반회원');
+INSERT INTO USER_GRADE3 VALUES(20,'우수회원');
+INSERT INTO USER_GRADE3 VALUES(30,'특별회원');
+
+SELECT * FROM USER_GRADE3;
+
+
+-- 자식 테이블 (USER_GRADE를 사용할 테이블)
+
+
+-- ON DELETE CASCADE 삭제옵션이 적용된 테이블 생성
+CREATE TABLE USER_USED_FK3(
+	  USER_NO NUMBER PRIMARY KEY,
+		USER_ID VARCHAR2(20) UNIQUE,
+		USER_PWD VARCHAR2(30) NOT NULL,
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50), 
+		GRADE_CODE NUMBER, 
+		CONSTRAINT GRADE_CODE_FK3 FOREIGN KEY(GRADE_CODE) 
+		REFERENCES USER_GRADE3(GRADE_CODE) ON DELETE CASCADE
+);																																		
+
+
+
+-- 샘플 데이터 삽입
+INSERT INTO USER_USED_FK3
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK3
+VALUES(2,'USER02','PASS02','이순신','남','010-5678-5678','lee123@kh.or.kr',10);
+
+INSERT INTO USER_USED_FK3
+VALUES(3,'USER03','PASS03','유관순','여','010-5999-5678','yoo123@kh.or.kr',30);
+
+INSERT INTO USER_USED_FK3
+VALUES(4,'USER04','PASS04','안중근','남','010-2222-1111','ahn123@kh.or.kr', NULL); -- NULL 사용 가능
+
+
+COMMIT;
+
+
+SELECT * FROM USER_USED_FK3;
+SELECT * FROM USER_GRADE3;
+
+
+-- 부모테이블인 USER_GRADE3에서 GRADE_CODE = 10 삭제
+--> ON DELETE CASCADE 옵션이 설정되어 있어서 오류 없이 삭제됨.
+DELETE FROM USER_GRADE3
+WHERE GRADE_CODE = 10;
+
+
+-- ON DELETE CASCADE 옵션으로 인해 참조키를 사용한 행이 삭제됨을 확인
+SELECT * FROM USER_USED_FK3;
+SELECT * FROM USER_GRADE3;
+
+
+-----------------------------------------------------------------------------------------------
+
+-- 5. CHECK 제약 조건 : 컬럼에 기록되는 값에 조건 설정을 할 수 있음
+-- CHECK (컬럼명 비교연산자 비교값)
+
+CREATE TABLE USER_USED_CHECK(
+	  USER_NO NUMBER PRIMARY KEY,
+		USER_ID VARCHAR2(20) UNIQUE,
+		USER_PWD VARCHAR2(30) NOT NULL,
+		USER_NAME VARCHAR2(30),
+		GENDER VARCHAR2(10) CONSTRAINT GENDER_CHECK CHECK(GENDER IN ('남','여')),
+		PHONE VARCHAR2(30),
+		EMAIL VARCHAR2(50)
+);
+
+INSERT INTO USER_USED_CHECK
+VALUES(1,'USER01','PASS01','홍길동','남','010-1234-5678','hong123@kh.or.kr');
+
+INSERT INTO USER_USED_CHECK
+VALUES(2,'USER02','PASS02','홍길동','남성','010-1234-5678','hong123@kh.or.kr');
+-- GENDER 컬럼에 CHECK 제약 조건으로 '남' 또는 '여'만 기록 가능한데
+-- '남성'이라는 조건 이외의 값이 들어와 에러 발생
+-- ORA-02290: 체크 제약조건(KH_ASH.GENDER_CHECK)이 위배되었습니다
 
 
 
