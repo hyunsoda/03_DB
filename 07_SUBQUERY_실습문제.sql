@@ -34,7 +34,7 @@ WHERE (DEPT_CODE, JOB_CODE) = (SELECT DEPT_CODE, JOB_CODE FROM EMPLOYEE WHERE EX
 -- 5. 77년생 여자 사원과 동일한 부서이면서 동일한 사수를 가지고 있는 사원을 조회하시오
 -- 사번, 이름, 부서코드, 사수번호, 주민번호, 고용일
 SELECT EMP_ID, EMP_NAME, DEPT_CODE, MANAGER_ID, EMP_NO, HIRE_DATE FROM EMPLOYEE 
-WHERE (DEPT_CODE,MANAGER_ID) = (SELECT DEPT_CODE, MANAGER_ID FROM EMPLOYEE WHERE SUBSTR(EMP_NO,1,2) = 77 AND SUBSTR(EMP_NO,8,1)=2); 
+WHERE (DEPT_CODE,MANAGER_ID) = (SELECT DEPT_CODE, MANAGER_ID FROM EMPLOYEE WHERE SUBSTR(EMP_NO,1,2) = 77 AND SUBSTR(EMP_NO,8,1) = 2); 
 
 
 -- 6. 부서별 입사일이 가장 빠른 사원의
@@ -47,6 +47,15 @@ LEFT JOIN DEPARTMENT ON (DEPT_ID = DEPT_CODE)
 JOIN JOB USING (JOB_CODE)
 WHERE HIRE_DATE IN (SELECT MIN(HIRE_DATE) FROM EMPLOYEE WHERE ENT_YN = 'N' GROUP BY DEPT_CODE)
 ORDER BY HIRE_DATE ;
+-- 퇴사자를 메인쿼리에서 제외하게 되면 (이태림)이 퇴사자라 D8그룹의 DATA가 나오지 않게 된다.
+-- 부서별로 그룹을 묶을 때 퇴사한 직원을 서브쿼리에서 제외해야 함
+-- 왜? 부서별로 가장 빠른 입사자 구했을 때 D8부서는 이태림임 (이태림은 퇴사자)
+--> 문제점 : 부서별로 가장 빠른 입사자 구해놓고 메인쿼리에서 퇴사자 제외해버리면
+--					 D8부서는 퇴사자인 이태림이 가장 빠른 입사자이기 때문에 
+--					 전체 부서 중 D8부서가 아예 제외되어 버림.
+-- 부서별 가장 빠른 입사자 구할 때(서브쿼리) 퇴사한 직원을 뺀 상태에서 그룹으로 묶으면
+-- D8부서의 가장 빠른 입사자는 이태림 제외 후 전형돈이 됨.
+
 
 
 -- 7. 직급별 나이가 가장 어린 직원의
@@ -59,4 +68,31 @@ JOIN JOB USING (JOB_CODE)
 WHERE (JOB_CODE, FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE('19'||SUBSTR(EMP_NO,1,6),'YYYYMMDD')) /12 )) IN 
 	(SELECT JOB_CODE,MIN(FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE('19'||SUBSTR(EMP_NO,1,6),'YYYYMMDD')) /12 )) FROM  EMPLOYEE GROUP BY JOB_CODE)
 ORDER BY 나이 DESC;
+
+
+
+-- 예시답안
+-- 서브쿼리
+SELECT MAX(EMP_NO) FROM EMPLOYEE
+GROUP BY JOB_CODE;
+
+-- 메인쿼리
+SELECT EMP_ID, EMP_NAME, JOB_NAME,
+			FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE(SUBSTR(EMP_NO,1,6),'RRMMDD')) / 12) 나이,
+			TO_CHAR (SALARY * (1+ NVL(BONUS,0)) * 12,'L999,999,999') 보너스포함연봉 FROM EMPLOYEE
+JOIN JOB USING (JOB_CODE);
+
+
+SELECT EMP_ID, EMP_NAME, JOB_NAME,
+			FLOOR (MONTHS_BETWEEN(SYSDATE, TO_DATE(SUBSTR(EMP_NO,1,6),'RRMMDD')) / 12) 나이,
+			TO_CHAR (SALARY * (1+ NVL(BONUS,0)) * 12,'L999,999,999') 보너스포함연봉 FROM EMPLOYEE
+JOIN JOB USING (JOB_CODE)
+WHERE EMP_NO IN (SELECT MAX(EMP_NO) FROM EMPLOYEE
+								GROUP BY JOB_CODE)
+ORDER BY 나이 DESC;
+
+
+
+
+
 

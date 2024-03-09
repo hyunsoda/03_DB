@@ -517,6 +517,7 @@ WHERE ENT_YN = 'N'; -- 퇴사 안 한 사람
 -- 서브쿼리 (부서별 입사일이 가장 빠른 사원)
 SELECT MIN(HIRE_DATE) FROM EMPLOYEE
 WHERE DEPT_CODE = 'D1';
+
 									
 /* 1. 메인쿼리의 첫번째 행인 방명수가 있는 부서 D1의 가장 빠른 입사일을 조회했는데,
  *	  2007-03-20 00:00:00.000
