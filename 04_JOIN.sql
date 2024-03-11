@@ -63,7 +63,7 @@ JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
 -- 1) 연결에 사용할 두 컬럼명이 다른 경우
 
 -- ANSI
--- 연결에 사용할 컬럼며이 다른 경우 ON()을 사용
+-- 연결에 사용할 컬럼명이 다른 경우 ON()을 사용
 SELECT EMP_ID, EMP_NAME, DEPT_CODE, DEPT_TITLE
 FROM EMPLOYEE 
 JOIN DEPARTMENT ON (DEPT_CODE = DEPT_ID);
@@ -89,7 +89,7 @@ L5        |RU           |EU        |
 
 /* DEPARTMENT 테이블
  * 
- * DEPT_ID|DEPT_TITLE|LOCATION_ID|
+DEPT_ID|DEPT_TITLE|LOCATION_ID|
 -------+----------+-----------+
 D1     |인사관리부     |L1         |
 D2     |회계관리부     |L1         |
