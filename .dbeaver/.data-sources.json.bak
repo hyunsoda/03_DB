@@ -67,7 +67,7 @@
 		"oracle_thin-18e2be73e34-421e38bdfa7d3519": {
 			"provider": "oracle",
 			"driver": "oracle_thin",
-			"name": "localhost 2",
+			"name": "exam_ash",
 			"save-password": true,
 			"configuration": {
 				"host": "localhost",
@@ -91,7 +91,7 @@
 			"name": "Development",
 			"color": "255,255,255",
 			"description": "Regular development database",
-			"auto-commit": true,
+			"auto-commit": false,
 			"confirm-execute": false,
 			"confirm-data-change": false,
 			"smart-commit": false,
