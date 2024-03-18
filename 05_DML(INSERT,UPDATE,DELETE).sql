@@ -131,7 +131,6 @@ AND DEPT_TITLE = '총무부';
 
 SELECT * FROM DEPARTMENT2;
 
-
 --------------------------------------------------------------------
 
 -- * UPDATE시에도 서브쿼리를 사용 가능
@@ -301,7 +300,7 @@ ROLLBACK;
 SELECT * FROM EMPLOYEE3; -- 복구 완됨을 확인!
 
 
--- DELETE : 휴지통 벌리기
+-- DELETE : 휴지통 버리기
 -- TRUNCATE : 완전 삭제
 
 
