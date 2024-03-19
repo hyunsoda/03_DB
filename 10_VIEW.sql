@@ -45,7 +45,7 @@ JOIN JOB USING(JOB_CODE);
 -- 1) SYS 관리자 계정 접속
 -- 2) ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 -- 3) GRANT CREATE VIEW TO kh_ash;
--- 4) 권한 부텨 받은 kh 계정으로 접속하여 위 VIEW 생성 구문 다시 실행
+-- 4) 권한 부여 받은 kh 계정으로 접속하여 위 VIEW 생성 구문 다시 실행
 
 ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE; -- 예전 문법 사용할 수 있게 해주는 구문
 GRANT CREATE VIEW TO kh_ash; -- VIEW 생성할 수 있는 권한 부여
