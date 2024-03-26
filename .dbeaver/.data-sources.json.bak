@@ -109,13 +109,34 @@
 		"oracle_thin-18e4ee6178e-5010aeaad6e3d96a": {
 			"provider": "oracle",
 			"driver": "oracle_thin",
-			"name": "localhost",
+			"name": "board_project",
 			"save-password": true,
 			"configuration": {
 				"host": "localhost",
 				"port": "1521",
 				"database": "xe",
 				"url": "jdbc:oracle:thin:@//localhost:1521/xe",
+				"configurationType": "MANUAL",
+				"home": "C:\\app\\user1\\product\\18.0.0\\dbhomeXE",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-connection-type@": "BASIC",
+					"@dbeaver-sid-service@": "SERVICE"
+				},
+				"auth-model": "oracle_native"
+			}
+		},
+		"oracle_thin-18e78c8a06d-590703944b4a40d0": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "ORCL",
+			"save-password": true,
+			"configuration": {
+				"host": "localhost",
+				"port": "1521",
+				"database": "ORCL",
+				"url": "jdbc:oracle:thin:@//localhost:1521/ORCL",
 				"configurationType": "MANUAL",
 				"home": "C:\\app\\user1\\product\\18.0.0\\dbhomeXE",
 				"type": "dev",
