@@ -14,8 +14,6 @@ ALTER TABLE "STUDENT" ADD CHECK("STUDENT_DEL_FL" IN ('N', 'Y'));
 INSERT INTO STUDENT VALUES
 (SEQ_STUDENT_NUM.NEXTVAL,'user01', 'pass01','안소현', '체육학과', DEFAULT);
 
-
-
 INSERT INTO STUDENT VALUES
 (SEQ_STUDENT_NUM.NEXTVAL,'user02', 'pass02','정수빈', '영어영문학과', DEFAULT);
 
@@ -36,6 +34,26 @@ INSERT INTO STUDENT VALUES
 
 INSERT INTO STUDENT VALUES
 (SEQ_STUDENT_NUM.NEXTVAL,'user08', 'pass08','정윤희', '시각디자인과', DEFAULT);
+
+
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user11', 'pass11','오은지', '아동가족학과', DEFAULT);
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user12', 'pass12','안진현', '무역학과', DEFAULT);
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user13', 'pass13','유영민', '컴퓨터공학과', DEFAULT);
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user14', 'pass14','양석환', '체육학과', DEFAULT);
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user15', 'pass15','강승호', '영어영문학과', DEFAULT);
+
+INSERT INTO STUDENT VALUES
+(SEQ_STUDENT_NUM.NEXTVAL,'user16', 'pass16','홍길동', '컴퓨터공학과', DEFAULT);
 
 SELECT  * FROM STUDENT;
 
@@ -92,6 +110,60 @@ INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '고전문법', '국어국문�
 
 
 
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '객체지향프로그래밍', '컴퓨터공학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '데이터베이스', '컴퓨터공학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '소프트웨어공학', '컴퓨터공학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '알고리즘', '컴퓨터공학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '운영체제', '컴퓨터공학과');
+
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '국제무역론', '무역학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '무역학원론', '무역학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '무역벤처창업론', '무역학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '졸업논문', '무역학과');
+
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '영유아발달', '아동가족학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '가족관계론', '아동가족학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '건강가정론', '아동가족학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '놀이지도', '아동가족학과');
+
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '광고디자인', '시각디자인과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '영상과 미디어', '시각디자인과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '일러스트레이션', '시각디자인과');
+
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '체육교육방법론', '체육학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '육상', '체육학과');
+
+INSERT INTO CLASS VALUES (SEQ_CLASS_NUM.NEXTVAL, '골프', '체육학과');
+
+
+
+COMMIT;
+
+
+
+
+
+
+
+COMMIT;
+
 SELECT * FROM CLASS;
 
 
@@ -120,7 +192,7 @@ COMMIT;
 SELECT CLS_NAME FROM CLASS 
 WHERE MAJOR = '체육학과';
 
-INSERT INTO REGISTER VALUES (SEQ_REGISTER_NUM.NEXTVAL, '스포츠마케팅', 1,'체육학과');
+INSERT INTO REGISTER VALUES (SEQ_REGISTER_NUM.NEXTVAL, '스포츠마케팅', 1,'체육학과');	
 
 DELETE FROM REGISTER 
 WHERE REG_NO = 2;
@@ -133,7 +205,9 @@ WHERE STUDENT_NO = 6;
 
 
 
-
-
+		SELECT STUDENT_NO, STUDENT_ID, STUDENT_PW, STUDENT_NAME, MAJOR FROM STUDENT 
+		WHERE STUDENT_NO = 1
+		AND MAJOR = '체육학과'
+		AND STUDENT_DEL_FL = 'N';
 
 
