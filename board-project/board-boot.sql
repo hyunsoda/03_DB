@@ -113,7 +113,18 @@ DELETE FROM MEMBER WHERE MEMBER_NO = 3;
 
 SELECT * FROM "MEMBER";
 
-
+INSERT INTO "MEMBER"
+VALUES(SEQ_MEMBER_NO.NEXTVAL, 
+			 'user02@kh.or.kr',
+			 'pass02!',
+			 '유저삼',
+			 '01012341234',
+			 NULL,
+			 NULL,
+			 DEFAULT,
+			 DEFAULT,
+			 DEFAULT
+);
 
 
 
