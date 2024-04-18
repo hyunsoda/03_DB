@@ -24,7 +24,7 @@ ALTER USER spring_ash DEFAULT TABLESPACE SYSTEM QUOTA UNLIMITED ON SYSTEM;
 
 -- NVARCHAR2(10) : 가변 길이 문자열 10글자 (유니코드, 최대 4000 바이트)
 -- CLOB : 가변 길이 문자열 (최대 4GB)
-
+	
 
 /* MEMBER 테이블 생성 */
 CREATE TABLE "MEMBER"(
