@@ -210,6 +210,27 @@
 				},
 				"auth-model": "oracle_native"
 			}
+		},
+		"oracle_thin-18f1410bfd6-86babe629d0cd5a": {
+			"provider": "oracle",
+			"driver": "oracle_thin",
+			"name": "Project_DB",
+			"save-password": true,
+			"configuration": {
+				"host": "115.90.212.22",
+				"port": "10000",
+				"database": "xe",
+				"url": "jdbc:oracle:thin:@//115.90.212.22:10000/xe",
+				"configurationType": "MANUAL",
+				"home": "C:\\app\\user1\\product\\18.0.0\\dbhomeXE",
+				"type": "dev",
+				"closeIdleConnection": true,
+				"provider-properties": {
+					"@dbeaver-connection-type@": "BASIC",
+					"@dbeaver-sid-service@": "SERVICE"
+				},
+				"auth-model": "oracle_native"
+			}
 		}
 	},
 	"connection-types": {
@@ -217,7 +238,7 @@
 			"name": "Development",
 			"color": "255,255,255",
 			"description": "Regular development database",
-			"auto-commit": true,
+			"auto-commit": false,
 			"confirm-execute": false,
 			"confirm-data-change": false,
 			"smart-commit": false,
