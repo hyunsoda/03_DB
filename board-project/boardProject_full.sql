@@ -461,13 +461,26 @@ INSERT INTO "BOARD_IMG" VALUES(
 COMMIT;
 
 SELECT * FROM BOARD_IMG bi ;
+
+SELECT * FROM BOARD;
+
+	UPDATE BOARD SET
+	READ_COUNT = READ_COUNT +1
+	WHERE BOARD_NO = 2001;
 -------------------------------------------------------
 
 /* 좋아요 테이블(BOARD_LIKE) 샘플 데이터 추가 */
 INSERT INTO "BOARD_LIKE"
-VALUES(1, 1998); -- 1번 회원이 1998번 글에 좋아요를 클릭함
+VALUES(1, 2001); -- 1번 회원이 2001번 글에 좋아요를 클릭함
 
 COMMIT;
+
+SELECT * FROM BOARD_LIKE;
+
+-- 좋아요 여부 확인 ( 1: O / 0 : X )
+SELECT COUNT(*) FROM BOARD_LIKE
+WHERE MEMBER_NO =1
+AND BOARD_NO = 2001;
 
 
 -------------------------------------------------------
@@ -524,5 +537,39 @@ ORDER SIBLINGS BY COMMENT_NO
 
 SELECT * FROM MEMBER;
 
+----------------------------------------------
+
+INSERT INTO BOARD_IMG
+(
+	SELECT NEXT_IMG_NO(), '경로1', '원본1', '변경1', 1, 2001 FROM DUAL 
+	UNION
+	SELECT NEXT_IMG_NO(), '경로2', '원본2', '변경2', 2, 2001 FROM DUAL 
+	UNION
+	SELECT NEXT_IMG_NO(), '경로3', '원본3', '변경3', 3, 2001 FROM DUAL 
+
+);
+
+SELECT * FROM BOARD_IMG bi ;
+
+
+-- SEQ_IMG_NO 시퀀스의 다음 값을 반환하는 함수 생성
+CREATE OR REPLACE FUNCTION NEXT_IMG_NO
+
+-- 반환형
+RETURN NUMBER
+
+-- 사용할 변수
+IS IMG_NO NUMBER;
+
+BEGIN
+	SELECT SEQ_IMG_NO.NEXTVAL
+	INTO IMG_NO
+	FROM DUAL;
+
+	RETURN IMG_NO;
+END;
+;
+
+SELECT NEXT_IMG_NO() FROM DUAL; -- SEQUENCE 번호를 반환해주는 함수를 만듦
 
 
